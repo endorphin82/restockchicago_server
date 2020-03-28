@@ -1,4 +1,4 @@
-import {MONGO_URL} from "../keys";
+const MONGO_URL = require("../keys").MONGO_URL
 
 const express = require("express")
 const graphqlHTTP = require("express-graphql")
@@ -12,7 +12,13 @@ const _MONGO_URL = process.env.MONGO_URL || MONGO_URL
 
 mongoose.connect(_MONGO_URL, {useNewUrlParser: true})
 
-app.use(cors())
+if (process.env.NODE_ENV === 'production') {
+  app.use()
+} else {
+  app.use(cors())
+}
+
+// app.use(cors())
 
 app.use('/graphql', graphqlHTTP({
   schema,
