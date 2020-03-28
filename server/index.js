@@ -1,4 +1,4 @@
-const MONGO_URL = require("../keys").MONGO_URL
+// const MONGO_URL = require("../keys").MONGO_URL
 
 const express = require("express")
 const graphqlHTTP = require("express-graphql")
@@ -8,15 +8,15 @@ const cors = require("cors")
 
 const app = express()
 const PORT = process.env.PORT || 3005
-const _MONGO_URL = process.env.MONGO_URL || MONGO_URL
-
-mongoose.connect(_MONGO_URL, {useNewUrlParser: true})
+const _MONGO_URL = process.env.MONGO_URL
 
 if (process.env.NODE_ENV === 'production') {
   app.use()
 } else {
   app.use(cors())
 }
+
+mongoose.connect(_MONGO_URL, {useNewUrlParser: true})
 
 // app.use(cors())
 
