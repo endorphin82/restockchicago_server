@@ -11,7 +11,9 @@
     "mongoose": "^5.9.4",
     "nodemon": "^2.0.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gh-pages": "^2.2.0"
+  },
   "scripts": {
     "start": "node server/index.js",
     "server": "nodemon server/index.js"
