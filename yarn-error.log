@@ -1,0 +1,51 @@
+Arguments: 
+  /opt/node-v12.15.0-linux-x64/bin/node /opt/node-v12.15.0-linux-x64/lib/node_modules/yarn/bin/yarn.js run start
+
+PATH: 
+  /opt/node-v12.15.0-linux-x64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+Yarn version: 
+  1.22.0
+
+Node version: 
+  12.16.1
+
+Platform: 
+  linux x64
+
+Trace: 
+  SyntaxError: /home/username/proj2/restockchicago_server/package.json: Unexpected string in JSON at position 356
+      at JSON.parse (<anonymous>)
+      at /opt/node-v12.15.0-linux-x64/lib/node_modules/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/opt/node-v12.15.0-linux-x64/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /opt/node-v12.15.0-linux-x64/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "server",
+    "version": "1.0.0",
+    "description": "server ",
+    "main": "index.js",
+    "dependencies": {
+      "cors": "^2.8.5",
+      "express": "^4.17.1",
+      "express-graphql": "^0.9.0",
+      "graphql": "^14.6.0",
+      "mongoose": "^5.9.4",
+      "nodemon": "^2.0.2"
+    },
+    "devDependencies": {},
+    "scripts": {
+      "start": "node server/index.js"
+      "server": "nodemon server/index.js"
+    },
+    "author": "",
+    "license": "ISC"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

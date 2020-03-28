@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3005
 const _MONGO_URL = process.env.MONGO_URL
 
 if (process.env.NODE_ENV === 'production') {
-  app.use()
+  app.use() 
 } else {
   app.use(cors())
 }
