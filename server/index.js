@@ -10,11 +10,11 @@ const app = express()
 const PORT = process.env.PORT || 3005
 const _MONGO_URL = process.env.MONGO_URL
 
-if (process.env.NODE_ENV === 'production') {
-  console.log("NODE_ENV", process.env.NODE_ENV)
-} else {
+// if (process.env.NODE_ENV === 'production') {
+  // console.log("NODE_ENV", process.env.NODE_ENV)
+// } else {
   app.use(cors())
-}
+// }
 
 mongoose.connect(_MONGO_URL, {useNewUrlParser: true})
 
