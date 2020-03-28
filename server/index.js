@@ -1,3 +1,5 @@
+import {MONGO_URL} from "../keys";
+
 const express = require("express")
 const graphqlHTTP = require("express-graphql")
 const schema = require("../schema/schema")
@@ -6,9 +8,9 @@ const cors = require("cors")
 
 const app = express()
 const PORT = process.env.PORT || 3005
-// mongoose.connect('mongodb://localhost:27017/restockchicago', {useNewUrlParser: true})
-// mongoose.connect('mongodb://user:123user@ds329668.mlab.com:29668/restockchicago', {useNewUrlParser: true})
-mongoose.connect('mongodb://admin:123admin@ds329668.mlab.com:29668/restockchicago', {useNewUrlParser: true})
+const _MONGO_URL = process.env.MONGO_URL || MONGO_URL
+
+mongoose.connect(_MONGO_URL, {useNewUrlParser: true})
 
 app.use(cors())
 
