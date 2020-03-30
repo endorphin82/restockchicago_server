@@ -1,4 +1,4 @@
-// const MONGO_URL = require("../keys").MONGO_URL
+const MONGO_URL = require("../keys").MONGO_URL
 
 const express = require("express")
 const graphqlHTTP = require("express-graphql")
@@ -8,24 +8,38 @@ const cors = require("cors")
 
 const app = express()
 const PORT = process.env.PORT || 3005
-const _MONGO_URL = process.env.MONGO_URL
+const _MONGO_URL = process.env.MONGO_URL || MONGO_URL
+
+let demoLogger = (req, res, next) => {
+  let originalSend = res.send;
+    res.send = function (data) {
+        console.info(data);
+        originalSend.apply(res, Array.from(arguments));
+    }
+    next();
+}
 
 // if (process.env.NODE_ENV === 'production') {
-  // console.log("NODE_ENV", process.env.NODE_ENV)
+// console.log("NODE_ENV", process.env.NODE_ENV)
 // } else {
-  app.use(cors())
+app.use([cors(), demoLogger])
+
+// app.use(httpLogger);
 // }
 
-mongoose.connect(_MONGO_URL, {useNewUrlParser: true})
+mongoose.connect(_MONGO_URL, { useNewUrlParser: true })
 
 // app.use(cors())
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  graphiql: true,
-}))
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema,
+    graphiql: true
+  })
+)
 
-const dbConnection = mongoose.connection;
+const dbConnection = mongoose.connection
 dbConnection.on("error", err => {
   console.log(`Connection error: ${err}`)
 })
@@ -35,5 +49,9 @@ dbConnection.once("open", () => {
 })
 
 app.listen(PORT, err => {
-  err ? console.log(err) : console.log(`The server is running at http://localhost:${PORT}/graphql`)
+  err
+    ? console.log(err)
+    : console.log(
+        `Mongo Sever ${MONGO_URL} The server is running at http://localhost:${PORT}/graphql`
+      )
 })
