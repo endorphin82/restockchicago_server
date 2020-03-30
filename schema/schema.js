@@ -1,8 +1,13 @@
 const graphql = require("graphql")
 
 const {
-  GraphQLObjectType, GraphQLString, GraphQLSchema,
-  GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLSchema,
+  GraphQLID,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLNonNull,
   GraphQLBoolean
 } = graphql
 
@@ -53,8 +58,13 @@ const Mutation = new GraphQLObjectType({
         images: { type: new GraphQLList(GraphQLString) }
       },
       resolve(parent, { name, price, categoryId, images, icon }) {
+        console.info("addProduct: ", { name, price, categoryId, images, icon })
         const product = new Products({
-          name, price, categoryId, images, icon
+          name,
+          price,
+          categoryId,
+          images,
+          icon
         })
         return product.save()
       }
@@ -62,7 +72,7 @@ const Mutation = new GraphQLObjectType({
     updateProduct: {
       type: ProductType,
       args: {
-        id: { type: GraphQLID },
+        id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) },
         price: { type: new GraphQLNonNull(GraphQLInt) },
         categoryId: { type: new GraphQLNonNull(GraphQLID) },
@@ -70,6 +80,14 @@ const Mutation = new GraphQLObjectType({
         icon: { type: GraphQLString }
       },
       resolve(parent, { id, name, price, categoryId, images, icon }) {
+        console.info("updateProduct :", {
+          id,
+          name,
+          price,
+          categoryId,
+          images,
+          icon
+        })
         return Products.findByIdAndUpdate(
           id,
           { $set: { name, price, categoryId, images, icon } },
@@ -79,8 +97,9 @@ const Mutation = new GraphQLObjectType({
     },
     deleteProduct: {
       type: ProductType,
-      args: { id: { type: GraphQLID } },
+      args: { id: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(parent, { id }) {
+        console.info("deleteProduct :", id)
         return Products.findByIdAndRemove(id)
       }
     }
@@ -101,6 +120,7 @@ const Query = new GraphQLObjectType({
       type: new GraphQLList(ProductType),
       args: { name: { type: GraphQLString } },
       resolve(parent, { name }) {
+        console.info("productByName:", name)
         return Products.find({ name: { $regex: name, $options: "i" } })
       }
     },
@@ -108,29 +128,38 @@ const Query = new GraphQLObjectType({
       type: CategoryType,
       args: { id: { type: GraphQLID } },
       resolve(parent, { id }) {
+        console.info("categoryById:", id)
         return Categories.findById(id)
       }
     },
     productsAll: {
       type: new GraphQLList(ProductType),
-      resolve: () => Products.find({})
+      resolve: () => {
+        console.info("productsAll")
+        return Products.find({})
+      }
     },
 
     categoryByName: {
       type: new GraphQLList(CategoryType),
       args: { name: { type: GraphQLString } },
       resolve(parent, { name }) {
+        console.info("categoryByName:", name)
         return Categories.find({ name: { $regex: name, $options: "i" } })
       }
     },
     categoriesAll: {
       type: new GraphQLList(CategoryType),
-      resolve: () => Categories.find({})
+      resolve: () => {
+        console.info("categoriesAll")
+        return Categories.find({})
+      }
     },
     categoriesByListNames: {
       type: new GraphQLList(CategoryType),
       args: { names: { type: new GraphQLList(GraphQLString) } },
       resolve(parent, { names }) {
+        console.info("categoriesByListNames :", names)
         return Categories.find({ name: { $in: names } })
       }
     }
