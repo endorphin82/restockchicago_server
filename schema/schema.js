@@ -1,4 +1,5 @@
 const graphql = require("graphql")
+const TRASH_ID = require("../keys").TRASH_ID
 
 const {
   GraphQLObjectType,
@@ -101,6 +102,18 @@ const Mutation = new GraphQLObjectType({
       resolve(parent, { id }) {
         console.info("deleteProduct :", id)
         return Products.findByIdAndRemove(id)
+      }
+    },
+    addProductsWithoutCategoryInTrash: {
+      type: ProductType,
+      resolve() {
+        const predicate = { categoryId: { $eq: "" } }
+        const projection = { categoryId: 1 }
+        return Products.updateMany(
+          predicate,
+          { $set: { categoryId: TRASH_ID } },
+          { new: true }
+        )
       }
     }
   }
