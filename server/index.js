@@ -10,26 +10,23 @@ const app = express()
 const PORT = process.env.PORT || 3005
 const _MONGO_URL = process.env.MONGO_URL || MONGO_URL
 
-let demoLogger = (req, res, next) => {
-  let originalSend = res.send;
-    res.send = function (data) {
-        console.info(data);
-        originalSend.apply(res, Array.from(arguments));
-    }
-    next();
+// logging all data in console
+const logData = (req, res, next) => {
+  const originalSend = res.send
+  res.send = function(data) {
+    console.info(data)
+
+    originalSend.call(res, data)
+    
+    // originalSend.bind(res, data)()
+    // originalSend(data);
+  }
+  next()
 }
 
-// if (process.env.NODE_ENV === 'production') {
-// console.log("NODE_ENV", process.env.NODE_ENV)
-// } else {
-app.use([cors(), demoLogger])
-
-// app.use(httpLogger);
-// }
+app.use([cors(), logData])
 
 mongoose.connect(_MONGO_URL, { useNewUrlParser: true })
-
-// app.use(cors())
 
 app.use(
   "/graphql",

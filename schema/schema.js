@@ -20,7 +20,7 @@ const ProductType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: new GraphQLNonNull(GraphQLString) },
-    price: { type: new GraphQLNonNull(GraphQLInt) },
+    price: { type: new GraphQLNonNull(GraphQLString) },
     images: { type: new GraphQLList(GraphQLString) },
     category: {
       type: CategoryType,
@@ -54,7 +54,7 @@ const Mutation = new GraphQLObjectType({
       type: ProductType,
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
-        price: { type: new GraphQLNonNull(GraphQLInt) },
+        price: { type: new GraphQLNonNull(GraphQLString) },
         categoryId: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLString) }
       },
@@ -75,7 +75,7 @@ const Mutation = new GraphQLObjectType({
       args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) },
-        price: { type: new GraphQLNonNull(GraphQLInt) },
+        price: { type: new GraphQLNonNull(GraphQLString) },
         categoryId: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLString) },
         icon: { type: GraphQLString }
@@ -98,6 +98,7 @@ const Mutation = new GraphQLObjectType({
     },
     deleteProduct: {
       type: ProductType,
+      description: "Description deleteProduct",
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(parent, { id }) {
         console.info("deleteProduct :", id)
@@ -152,7 +153,13 @@ const Query = new GraphQLObjectType({
         return Products.find({})
       }
     },
-
+    productsByCategoryId: {
+      type: new GraphQLList(ProductType),
+      args: { categoryId: { type: GraphQLID } },
+      resolve(parent, { categoryId }) {
+        return Products.find({ categoryId: { $in: categoryId } })
+      }
+    },
     categoryByName: {
       type: new GraphQLList(CategoryType),
       args: { name: { type: GraphQLString } },
