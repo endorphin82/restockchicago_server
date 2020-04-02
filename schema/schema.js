@@ -112,7 +112,7 @@ const Mutation = new GraphQLObjectType({
         const projection = { categoryId: 1 }
         return Products.updateMany(
           predicate,
-          { $set: { categoryId: TRASH_ID } },
+          { $set: { categoryId: process.env.TRASH_ID || TRASH_ID } },
           { new: true }
         )
       }
