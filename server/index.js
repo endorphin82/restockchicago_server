@@ -8,7 +8,7 @@ const PORT = require("../keys").PORT
 
 const app = express()
 const _PORT = PORT || 3005
-const _MONGO_URL = process.env.MONGO_URL
+const _MONGO_URL = process.env.MONGO_URL || MONGO_URL
 console.log("process.env.NODE_ENV",process.env.NODE_ENV)
 
 // logging all data in console
@@ -27,7 +27,7 @@ const logData = (req, res, next) => {
 
 app.use([cors(), logData])
 
-mongoose.connect(process.env.MONGO_URL || MONGO_URL, { useNewUrlParser: true })
+mongoose.connect(_MONGO_URL, { useNewUrlParser: true })
 
 app.use(
   "/graphql",
