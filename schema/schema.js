@@ -1,5 +1,5 @@
 const graphql = require("graphql")
-const TRASH_ID = require("../keys.dev").TRASH_ID
+const TRASH_ID = require("../keys").TRASH_ID
 
 const {
   GraphQLObjectType,
