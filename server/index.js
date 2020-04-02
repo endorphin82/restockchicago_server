@@ -10,8 +10,7 @@ const app = express()
 const _PORT = PORT || 3005
 const _MONGO_URL = process.env.MONGO_URL
 console.log("process.env.NODE_ENV",process.env.NODE_ENV)
-console.log("MONGO_URL||||||||||||||||||||||||||||", MONGO_URL)
-console.log("PORT||||||||||||||||||||||||||||", PORT)
+
 // logging all data in console
 const logData = (req, res, next) => {
   const originalSend = res.send
