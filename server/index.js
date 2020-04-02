@@ -27,7 +27,7 @@ const logData = (req, res, next) => {
 
 app.use([cors(), logData])
 
-mongoose.connect(MONGO_URL, { useNewUrlParser: true })
+mongoose.connect(process.env.MONGO_URL || MONGO_URL, { useNewUrlParser: true })
 
 app.use(
   "/graphql",
