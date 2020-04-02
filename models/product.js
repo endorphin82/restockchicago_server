@@ -1,10 +1,11 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
+const mongooseUtils = require('mongoose/lib/utils');
 
 const productSchema = new Schema({
   name: String,
   categoryId: String,
-  price: Number,
+  price: String,
   images: [String],
   icon: String
 })
