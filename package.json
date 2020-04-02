@@ -16,6 +16,7 @@
   },
   "scripts": {
     "start": "nodemon server/index.js",
+    "prod": "NODE_ENV=production nodemon server/index.js",
     "dev": "NODE_ENV=development nodemon server/index.js",
     "server": "node server/index.js"
   },
