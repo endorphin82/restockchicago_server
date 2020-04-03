@@ -12,12 +12,14 @@
     "nodemon": "^2.0.2"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "gh-pages": "^2.2.0"
   },
   "scripts": {
     "start": "nodemon server/index.js",
     "prod": "NODE_ENV=production nodemon server/index.js",
-    "dev": "NODE_ENV=development nodemon server/index.js",
+    "dev": "nodemon -r dotenv/config server/index.js",
+    "dev_node": "node -r dotenv/config server/index.js",
     "server": "node server/index.js"
   },
   "author": "",
