@@ -1,6 +1,6 @@
 const graphql = require("graphql")
-const TRASH_ID = require("../keys").TRASH_ID
-const _TRASH_ID = process.env.TRASH_ID || TRASH_ID
+// const TRASH_ID = require("../keys").TRASH_ID
+
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -112,7 +112,7 @@ const Mutation = new GraphQLObjectType({
         const projection = { categoryId: 1 }
         return Products.updateMany(
           predicate,
-          { $set: { categoryId: _TRASH_ID_ } },
+          { $set: { categoryId: process.env.TRASH_ID } },
           { new: true }
         )
       }
