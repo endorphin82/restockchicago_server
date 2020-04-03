@@ -17,9 +17,7 @@
   },
   "scripts": {
     "start": "nodemon server/index.js",
-    "prod": "NODE_ENV=production nodemon server/index.js",
     "dev": "nodemon -r dotenv/config server/index.js",
-    "dev_node": "node -r dotenv/config server/index.js",
     "server": "node server/index.js"
   },
   "author": "",
