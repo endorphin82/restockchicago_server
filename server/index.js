@@ -3,15 +3,12 @@ const graphqlHTTP = require("express-graphql")
 const schema = require("../schema/schema")
 const mongoose = require("mongoose")
 const cors = require("cors")
-// const MONGO_URL = require("../keys").MONGO_URL
-// const PORT = require("../keys").PORT
 
 const app = express()
 const PORT = process.env.PORT || 3005
-const HOST =  process.env.HOST || "http://localhost"
-const _MONGO_URL = process.env.MONGO_URL
-console.log("process.env.NODE_ENV",process.env.NODE_ENV)
-console.log("process.env.MONGO_URL",process.env.MONGO_URL)
+const HOST = process.env.HOST || "http://localhost"
+const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/restockchicago"
+
 
 // logging all data in console
 const logData = (req, res, next) => {
@@ -20,7 +17,7 @@ const logData = (req, res, next) => {
     console.info(data)
 
     originalSend.call(res, data)
-    
+
     // originalSend.bind(res, data)()
     // originalSend(data);
   }
@@ -29,7 +26,7 @@ const logData = (req, res, next) => {
 
 app.use([cors(), logData])
 
-mongoose.connect(_MONGO_URL, { useNewUrlParser: true })
+mongoose.connect(MONGO_URL, { useNewUrlParser: true })
 
 app.use(
   "/graphql",
@@ -52,6 +49,6 @@ app.listen(PORT, err => {
   err
     ? console.log(err)
     : console.log(
-        `Mongo Server ${_MONGO_URL} The server is running at ${HOST}:${PORT}/graphql`
+        `Mongo Server ${MONGO_URL} The server is running at ${HOST}:${PORT}/graphql`
       )
 })
