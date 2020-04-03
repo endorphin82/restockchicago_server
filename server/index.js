@@ -8,6 +8,7 @@ const cors = require("cors")
 
 const app = express()
 const PORT = process.env.PORT || 3005
+const HOST =  process.env.HOST || "http://localhost"
 const _MONGO_URL = process.env.MONGO_URL
 console.log("process.env.NODE_ENV",process.env.NODE_ENV)
 console.log("process.env.MONGO_URL",process.env.MONGO_URL)
@@ -51,6 +52,6 @@ app.listen(PORT, err => {
   err
     ? console.log(err)
     : console.log(
-        `Mongo Server ${_MONGO_URL} The server is running at http://localhost:${PORT}/graphql`
+        `Mongo Server ${_MONGO_URL} The server is running at ${HOST}:${PORT}/graphql`
       )
 })
