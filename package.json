@@ -17,7 +17,8 @@
   },
   "scripts": {
     "start": "nodemon server/index.js",
-    "dev": "nodemon -r dotenv/config server/index.js",
+    "dev:local": "nodemon -r dotenv/config server/index.js dotenv_config_path=dev.local.env",
+    "dev:global": "nodemon -r dotenv/config server/index.js dotenv_config_path=dev.global.env",
     "server": "node server/index.js"
   },
   "author": "",
