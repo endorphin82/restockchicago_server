@@ -105,7 +105,7 @@ const Mutation = new GraphQLObjectType({
         return Products.findByIdAndRemove(id)
       }
     },
-    addProductsWithoutCategoryInTrash: {
+    addProductsWithoutCategoryInRecycleBin: {
       type: ProductType,
       resolve() {
         const predicate = { categoryId: { $eq: "" } }
@@ -115,6 +115,16 @@ const Mutation = new GraphQLObjectType({
           { $set: { categoryId: process.env.RECYCLE_BIN_ID } },
           { new: true }
         )
+      }
+    },
+    clearRecycleBin: {
+      type: ProductType,
+      resolve() {
+        return Products.deleteMany({
+          categoryId: { $eq: process.env.RECYCLE_BIN_ID }
+        })
+        // .then(next)
+        .then(res => res.deletedCount)
       }
     }
   }
