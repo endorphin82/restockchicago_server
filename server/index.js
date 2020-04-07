@@ -49,6 +49,6 @@ app.listen(PORT, err => {
   err
     ? console.log(err)
     : console.log(
-        `Mongo Server ${MONGO_URL} The server is running at ${HOST}:${PORT}/graphql`
+        `Mongo Server ${MONGO_URL} The server is CHECK running at ${HOST}:${PORT}/graphql`
       )
 })
