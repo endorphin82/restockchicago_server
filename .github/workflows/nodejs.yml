@@ -24,9 +24,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-        RECYCLE_BIN_ID: ${{ secrets.RECYCLE_BIN_ID }}
-        MONGO_URL:  ${{ secrets.MONGO_URL }} 
+      #  RECYCLE_BIN_ID: ${{ secrets.RECYCLE_BIN_ID }}
+      #  MONGO_URL:  ${{ secrets.MONGO_URL }} 
     - run: npm ci
-    - run: npm start
+   # - run: npm start
       env:
         CI: true
