@@ -9,7 +9,8 @@ const {
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLBoolean
+  GraphQLBoolean,
+  GraphQLFloat
 } = graphql
 
 const Categories = require("../models/category")
@@ -20,7 +21,7 @@ const ProductType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: new GraphQLNonNull(GraphQLString) },
-    price: { type: new GraphQLNonNull(GraphQLString) },
+    price: { type: new GraphQLNonNull(GraphQLFloat) },
     images: { type: new GraphQLList(GraphQLString) },
     category: {
       type: CategoryType,
@@ -54,7 +55,7 @@ const Mutation = new GraphQLObjectType({
       type: ProductType,
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
-        price: { type: new GraphQLNonNull(GraphQLString) },
+        price: { type: new GraphQLNonNull(GraphQLFloat) },
         categoryId: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLString) }
       },
@@ -75,7 +76,7 @@ const Mutation = new GraphQLObjectType({
       args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) },
-        price: { type: new GraphQLNonNull(GraphQLString) },
+        price: { type: new GraphQLNonNull(GraphQLFloat) },
         categoryId: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLString) },
         icon: { type: GraphQLString }
@@ -123,8 +124,7 @@ const Mutation = new GraphQLObjectType({
         return Products.deleteMany({
           categoryId: { $eq: process.env.RECYCLE_BIN_ID }
         })
-        // .then(next)
-        .then(res => res.deletedCount)
+        .then(res => res)
       }
     }
   }
