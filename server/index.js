@@ -34,7 +34,7 @@ app.use(
     schema,
     graphiql: true
   })
-)
+) 
 
 const dbConnection = mongoose.connection
 dbConnection.on("error", err => {
