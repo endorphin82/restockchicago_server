@@ -26,7 +26,10 @@ const logData = (req, res, next) => {
 
 app.use([cors(), logData])
 
-mongoose.connect(MONGO_URL, { useNewUrlParser: true })
+mongoose.connect(MONGO_URL, { 
+  useUnifiedTopology: true,
+  useNewUrlParser: true 
+})
 
 app.use(
   "/graphql",
@@ -49,6 +52,6 @@ app.listen(PORT, err => {
   err
     ? console.log(err)
     : console.log(
-        `Mongo Server ${MONGO_URL} The server is CHECK running at ${HOST}:${PORT}/graphql`
+        `Mongo Server ${MONGO_URL} The server is running at ${HOST}:${PORT}/graphql`
       )
 })
