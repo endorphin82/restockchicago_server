@@ -23,6 +23,7 @@ const ProductType = new GraphQLObjectType({
     name: { type: new GraphQLNonNull(GraphQLString) },
     price: { type: new GraphQLNonNull(GraphQLFloat) },
     images: { type: new GraphQLList(GraphQLString) },
+    icon: { type: GraphQLString },
     category: {
       type: CategoryType,
       resolve({ categoryId }, args) {
@@ -57,7 +58,8 @@ const Mutation = new GraphQLObjectType({
         name: { type: new GraphQLNonNull(GraphQLString) },
         price: { type: new GraphQLNonNull(GraphQLFloat) },
         categoryId: { type: new GraphQLNonNull(GraphQLID) },
-        images: { type: new GraphQLList(GraphQLString) }
+        images: { type: new GraphQLList(GraphQLString) },
+        icon: { type: GraphQLString }
       },
       resolve(parent, { name, price, categoryId, images, icon }) {
         console.info("addProduct: ", { name, price, categoryId, images, icon })
