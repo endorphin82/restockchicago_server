@@ -40,7 +40,7 @@ const CategoryType = new GraphQLObjectType({
     name: { type: new GraphQLNonNull(GraphQLString) },
     icons: { type: new GraphQLList(GraphQLString) },
     images: { type: new GraphQLList(GraphQLString) },
-    category: {
+    products: {
       type: new GraphQLList(ProductType),
       resolve({ id }, args) {
         return Products.find({ categoryId: id })
@@ -156,7 +156,6 @@ const Mutation = new GraphQLObjectType({
         return category.save()
       },
     },
-
     updateCategory: {
       type: CategoryType,
       args: {
@@ -165,7 +164,7 @@ const Mutation = new GraphQLObjectType({
         images: { type: new GraphQLList(GraphQLString) },
         icons: { type: new GraphQLList(GraphQLString) }, 
       },
-      resolve(parent, { id, images, icons }) {
+      resolve(parent, { id, name, images, icons }) {
         console.info("updateCategory :", {
           id,
           name,

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
-const mongooseUtils = require('mongoose/lib/utils');
+// const mongooseUtils = require('mongoose/lib/utils');
 
 const productSchema = new Schema({
   name: String,
