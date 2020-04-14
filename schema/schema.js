@@ -10,7 +10,7 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLBoolean,
-  GraphQLFloat
+  GraphQLFloat,
 } = graphql
 
 const Categories = require("../models/category")
@@ -28,9 +28,9 @@ const ProductType = new GraphQLObjectType({
       type: CategoryType,
       resolve({ categoryId }, args) {
         return Categories.findById(categoryId)
-      }
-    }
-  })
+      },
+    },
+  }),
 })
 
 const CategoryType = new GraphQLObjectType({
@@ -44,9 +44,9 @@ const CategoryType = new GraphQLObjectType({
       type: new GraphQLList(ProductType),
       resolve({ id }, args) {
         return Products.find({ categoryId: id })
-      }
-    }
-  })
+      },
+    },
+  }),
 })
 
 const Mutation = new GraphQLObjectType({
@@ -59,7 +59,7 @@ const Mutation = new GraphQLObjectType({
         price: { type: new GraphQLNonNull(GraphQLFloat) },
         categoryId: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLString) },
-        icon: { type: GraphQLString }
+        icon: { type: GraphQLString },
       },
       resolve(parent, { name, price, categoryId, images, icon }) {
         console.info("addProduct: ", { name, price, categoryId, images, icon })
@@ -68,10 +68,10 @@ const Mutation = new GraphQLObjectType({
           price,
           categoryId,
           images,
-          icon
+          icon,
         })
         return product.save()
-      }
+      },
     },
     updateProduct: {
       type: ProductType,
@@ -81,7 +81,7 @@ const Mutation = new GraphQLObjectType({
         price: { type: new GraphQLNonNull(GraphQLFloat) },
         categoryId: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLString) },
-        icon: { type: GraphQLString }
+        icon: { type: GraphQLString },
       },
       resolve(parent, { id, name, price, categoryId, images, icon }) {
         console.info("updateProduct :", {
@@ -90,14 +90,14 @@ const Mutation = new GraphQLObjectType({
           price,
           categoryId,
           images,
-          icon
+          icon,
         })
         return Products.findByIdAndUpdate(
           id,
           { $set: { name, price, categoryId, images, icon } },
           { new: true }
         )
-      }
+      },
     },
     deleteProduct: {
       type: ProductType,
@@ -106,7 +106,7 @@ const Mutation = new GraphQLObjectType({
       resolve(parent, { id }) {
         console.info("deleteProduct :", id)
         return Products.findByIdAndRemove(id)
-      }
+      },
     },
     addProductsWithoutCategoryInRecycleBin: {
       type: ProductType,
@@ -118,16 +118,15 @@ const Mutation = new GraphQLObjectType({
           { $set: { categoryId: process.env.RECYCLE_BIN_ID } },
           { new: true }
         )
-      }
-    }, 
+      },
+    },
     clearRecycleBin: {
       type: ProductType,
       resolve() {
         return Products.deleteMany({
-          categoryId: { $eq: process.env.RECYCLE_BIN_ID }
-        })
-        .then(res => res)
-      }
+          categoryId: { $eq: process.env.RECYCLE_BIN_ID },
+        }).then((res) => res)
+      },
     },
     deleteCascadeCategoryWithProductsById: {
       type: CategoryType,
@@ -136,10 +135,9 @@ const Mutation = new GraphQLObjectType({
       resolve(parent, { id }) {
         console.info("deleteCascadeCategoryWithProductsById :", id)
         return Products.deleteMany({
-          categoryId: { $eq: id }
-        }).then(res => Categories.findByIdAndRemove(id).then(mes => mes))
-          
-      }
+          categoryId: { $eq: id },
+        }).then((res) => Categories.findByIdAndRemove(id).then((mes) => mes))
+      },
     },
     addCategory: {
       type: CategoryType,
@@ -153,12 +151,36 @@ const Mutation = new GraphQLObjectType({
         const category = new Categories({
           name,
           images,
-          icons
+          icons,
         })
         return category.save()
-      }
+      },
     },
-  }
+
+    updateCategory: {
+      type: CategoryType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        images: { type: new GraphQLList(GraphQLString) },
+        icons: { type: new GraphQLList(GraphQLString) }, 
+      },
+      resolve(parent, { id, images, icons }) {
+        console.info("updateCategory :", {
+          id,
+          name,
+          images,
+          icons,
+        })
+        return Categories.findByIdAndUpdate(
+          id,
+          { $set: { name, images, icons } },
+          { new: true }
+        )
+      },
+    }
+
+  },
 })
 
 const Query = new GraphQLObjectType({
@@ -169,7 +191,7 @@ const Query = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parent, { id }) {
         return Products.findById(id)
-      }
+      },
     },
     productByName: {
       type: new GraphQLList(ProductType),
@@ -177,7 +199,7 @@ const Query = new GraphQLObjectType({
       resolve(parent, { name }) {
         console.info("productByName:", name)
         return Products.find({ name: { $regex: name, $options: "i" } })
-      }
+      },
     },
     categoryById: {
       type: CategoryType,
@@ -185,21 +207,21 @@ const Query = new GraphQLObjectType({
       resolve(parent, { id }) {
         console.info("categoryById:", id)
         return Categories.findById(id)
-      }
+      },
     },
     productsAll: {
       type: new GraphQLList(ProductType),
       resolve: () => {
         console.info("productsAll")
         return Products.find({})
-      }
+      },
     },
     productsByCategoryId: {
       type: new GraphQLList(ProductType),
       args: { categoryId: { type: GraphQLID } },
       resolve(parent, { categoryId }) {
         return Products.find({ categoryId: { $in: categoryId } })
-      }
+      },
     },
     categoryByName: {
       type: new GraphQLList(CategoryType),
@@ -207,14 +229,14 @@ const Query = new GraphQLObjectType({
       resolve(parent, { name }) {
         console.info("categoryByName:", name)
         return Categories.find({ name: { $regex: name, $options: "i" } })
-      }
+      },
     },
     categoriesAll: {
       type: new GraphQLList(CategoryType),
       resolve: () => {
         console.info("categoriesAll")
         return Categories.find({})
-      }
+      },
     },
     categoriesByListNames: {
       type: new GraphQLList(CategoryType),
@@ -222,8 +244,8 @@ const Query = new GraphQLObjectType({
       resolve(parent, { names }) {
         console.info("categoriesByListNames :", names)
         return Categories.find({ name: { $in: names } })
-      }
-    }
+      },
+    },
     // products: {
     //   type: new GraphQLList(ProductType),
     //   args: {name: {type: GraphQLString}},
@@ -239,10 +261,10 @@ const Query = new GraphQLObjectType({
     //     return Categories.find({name: {$regex: name, $options: "i"}});
     //   },
     // },
-  }
+  },
 })
 
 module.exports = new GraphQLSchema({
   query: Query,
-  mutation: Mutation
+  mutation: Mutation,
 })
