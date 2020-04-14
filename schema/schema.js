@@ -119,7 +119,7 @@ const Mutation = new GraphQLObjectType({
           { new: true }
         )
       }
-    },
+    }, 
     clearRecycleBin: {
       type: ProductType,
       resolve() {
@@ -128,7 +128,36 @@ const Mutation = new GraphQLObjectType({
         })
         .then(res => res)
       }
-    }
+    },
+    deleteCascadeCategoryWithProductsById: {
+      type: CategoryType,
+      description: "Delete Category with products",
+      args: { id: { type: new GraphQLNonNull(GraphQLID) } },
+      resolve(parent, { id }) {
+        console.info("deleteCascadeCategoryWithProductsById :", id)
+        return Products.deleteMany({
+          categoryId: { $eq: id }
+        }).then(res => Categories.findByIdAndRemove(id).then(mes => mes))
+          
+      }
+    },
+    addCategory: {
+      type: CategoryType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        icons: { type: new GraphQLList(GraphQLString) },
+        images: { type: new GraphQLList(GraphQLString) },
+      },
+      resolve(parent, { name, images, icons }) {
+        console.info("addCategory: ", { name, images, icons })
+        const category = new Categories({
+          name,
+          images,
+          icons
+        })
+        return category.save()
+      }
+    },
   }
 })
 
