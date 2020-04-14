@@ -163,7 +163,7 @@ const Mutation = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) },
         images: { type: new GraphQLList(GraphQLString) },
-        icons: { type: new GraphQLList(GraphQLString) },
+        icons: { type: new GraphQLList(GraphQLString) }, 
       },
       resolve(parent, { id, images, icons }) {
         console.info("updateCategory :", {
