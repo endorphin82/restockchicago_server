@@ -28,7 +28,7 @@ const ProductType = new GraphQLObjectType({
     categories: {
       type: new GraphQLList(CategoryType),
       resolve({ categories }, args) {
-        return Categories.find({ id: { $in: categories } }, (err, docs) => {
+        return Categories.find({ _id: { $in: categories } }, (err, docs) => {
           console.log(docs)
         })
       },
@@ -113,14 +113,14 @@ const Mutation = new GraphQLObjectType({
         return Products.findByIdAndRemove(id)
       },
     },
-    addProductsWithoutCategoryInRecycleBin: {
+    addProductsWithoutCategoryInWithoutCategory: {
       type: ProductType,
       resolve() {
         const predicate = { categories: [] }
         const projection = { categories: 1 }
         return Products.updateMany(
           predicate,
-          { $addToSet: { categories: [process.env.RECYCLE_BIN_ID] } },
+          { $addToSet: { categories: [process.env.WITHOUT_CATEGORY_ID] } },
           { new: true }
         )
       },
@@ -198,6 +198,7 @@ const Query = new GraphQLObjectType({
         return Products.findById(id)
       },
     },
+    //ok
     productByName: {
       type: new GraphQLList(ProductType),
       args: { name: { type: GraphQLString } },
@@ -208,7 +209,7 @@ const Query = new GraphQLObjectType({
     },
     categoryById: {
       type: CategoryType,
-      args: { id: { type: GraphQLID } },
+      args: { id: { type: GraphQLString } },
       resolve(parent, { id }) {
         console.info("categoryById:", id)
         return Categories.findById(id)
