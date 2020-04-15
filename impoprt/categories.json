@@ -1,0 +1,11 @@
+{"_id":{"$oid":"5e820a78e3cd504a9fef2b0a"},"name":"jordan","icons":["https://endorphin82.github.io/restockchicago-img/img/header/jumpman.svg","https://endorphin82.github.io/restockchicago-img/img/header/jumpman_hover.svg"]}
+{"_id":{"$oid":"5e820a91e3cd504a9fef2b0f"},"name":"nike","icons":["https://endorphin82.github.io/restockchicago-img/img/header/nike_sport.svg","https://endorphin82.github.io/restockchicago-img/img/header/nike_sport_hover.svg"]}
+{"_id":{"$oid":"5e820aa2e3cd504a9fef2b12"},"name":"adidas","icons":["https://endorphin82.github.io/restockchicago-img/img/header/adidas.svg","https://endorphin82.github.io/restockchicago-img/img/header/adidas_hover.svg"]}
+{"_id":{"$oid":"5e820abee3cd504a9fef2b22"},"name":"supreme"}
+{"_id":{"$oid":"5e820acee3cd504a9fef2b27"},"name":"apparel"}
+{"_id":{"$oid":"5e820adde3cd504a9fef2b2a"},"name":"accessories"}
+{"_id":{"$oid":"5e820af7e3cd504a9fef2b36"},"name":"gift cards"}
+{"_id":{"$oid":"5e820b08e3cd504a9fef2b3b"},"name":"shop all"}
+{"_id":{"$oid":"5e846688cd408b19cec669cf"},"name":"recyclebin","icons":["https://endorphin82.github.io/restockchicago-img/img/trash/trash.svg","https://endorphin82.github.io/restockchicago-img/img/trash/trash_hover.svg","https://endorphin82.github.io/restockchicago-img/img/trash/trash_full.svg","https://endorphin82.github.io/restockchicago-img/img/trash/trash_full_hover.svg"]}
+{"_id":{"$oid":"5e95b6bc3d1ac64d4499371f"},"name":"new arrivals"}
+{"_id":{"$oid":"5e96e3fde387db2b3a20d122"},"icons":[],"images":[],"name":"deelete me1","__v":{"$numberInt":"0"}}
