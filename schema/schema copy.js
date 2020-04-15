@@ -18,19 +18,16 @@ const Products = require("../models/product")
 
 const ProductType = new GraphQLObjectType({
   name: "Product",
-
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: new GraphQLNonNull(GraphQLString) },
     price: { type: new GraphQLNonNull(GraphQLFloat) },
     images: { type: new GraphQLList(GraphQLString) },
     icon: { type: GraphQLString },
-    categories: {
-      type: new GraphQLList(CategoryType),
-      resolve({ categories }, args) {
-        return Categories.find({ id: { $in: categories } }, (err, docs) => {
-          console.log(docs)
-        })
+    categoryes: {
+      type: {new GraphQLList(CategoryType)},
+      resolve({ categoryId }, args) {
+        return Categories.findById(categoryId)
       },
     },
   }),
@@ -39,16 +36,14 @@ const ProductType = new GraphQLObjectType({
 const CategoryType = new GraphQLObjectType({
   name: "Category",
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLID },
     name: { type: new GraphQLNonNull(GraphQLString) },
     icons: { type: new GraphQLList(GraphQLString) },
     images: { type: new GraphQLList(GraphQLString) },
     products: {
       type: new GraphQLList(ProductType),
-      resolve({ products }, args) {
-        return Products.find({ _id: { $in: products } }, (err, docs) => {
-          console.log(docs)
-        })
+      resolve({ id }, args) {
+        return Products.find({ categoryId: id })
       },
     },
   }),
@@ -62,7 +57,7 @@ const Mutation = new GraphQLObjectType({
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
         price: { type: new GraphQLNonNull(GraphQLFloat) },
-        categories: { type: new GraphQLList(GraphQLString) },
+        categoryId: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLString) },
         icon: { type: GraphQLString },
       },
@@ -84,22 +79,22 @@ const Mutation = new GraphQLObjectType({
         id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) },
         price: { type: new GraphQLNonNull(GraphQLFloat) },
-        categories: { type: new GraphQLList(GraphQLString) },
+        categoryId: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLString) },
         icon: { type: GraphQLString },
       },
-      resolve(parent, { id, name, price, categories, images, icon }) {
+      resolve(parent, { id, name, price, categoryId, images, icon }) {
         console.info("updateProduct :", {
           id,
           name,
           price,
-          categories,
+          categoryId,
           images,
           icon,
         })
         return Products.findByIdAndUpdate(
           id,
-          { $set: { name, price, categories, images, icon } },
+          { $set: { name, price, categoryId, images, icon } },
           { new: true }
         )
       },
@@ -116,11 +111,11 @@ const Mutation = new GraphQLObjectType({
     addProductsWithoutCategoryInRecycleBin: {
       type: ProductType,
       resolve() {
-        const predicate = { categories: [] }
-        const projection = { categories: 1 }
+        const predicate = { categoryId: { $eq: "" } }
+        const projection = { categoryId: 1 }
         return Products.updateMany(
           predicate,
-          { $addToSet: { categories: [process.env.RECYCLE_BIN_ID] } },
+          { $set: { categoryId: process.env.RECYCLE_BIN_ID } },
           { new: true }
         )
       },
@@ -129,7 +124,7 @@ const Mutation = new GraphQLObjectType({
       type: ProductType,
       resolve() {
         return Products.deleteMany({
-          categoryes: process.env.RECYCLE_BIN_ID,
+          categoryId: { $eq: process.env.RECYCLE_BIN_ID },
         }).then((res) => res)
       },
     },
@@ -140,22 +135,20 @@ const Mutation = new GraphQLObjectType({
       resolve(parent, { id }) {
         console.info("deleteCascadeCategoryWithProductsById :", id)
         return Products.deleteMany({
-          categoryes: id,
+          categoryId: { $eq: id },
         }).then((res) => Categories.findByIdAndRemove(id).then((mes) => mes))
       },
     },
     addCategory: {
       type: CategoryType,
       args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
         name: { type: new GraphQLNonNull(GraphQLString) },
         icons: { type: new GraphQLList(GraphQLString) },
         images: { type: new GraphQLList(GraphQLString) },
       },
-      resolve(parent, { id, name, images, icons }) {
-        console.info("addCategory: ", { id, name, images, icons })
+      resolve(parent, { name, images, icons }) {
+        console.info("addCategory: ", { name, images, icons })
         const category = new Categories({
-          id,
           name,
           images,
           icons,
@@ -166,10 +159,10 @@ const Mutation = new GraphQLObjectType({
     updateCategory: {
       type: CategoryType,
       args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
+        id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) },
         images: { type: new GraphQLList(GraphQLString) },
-        icons: { type: new GraphQLList(GraphQLString) },
+        icons: { type: new GraphQLList(GraphQLString) }, 
       },
       resolve(parent, { id, name, images, icons }) {
         console.info("updateCategory :", {
@@ -180,11 +173,12 @@ const Mutation = new GraphQLObjectType({
         })
         return Categories.findByIdAndUpdate(
           id,
-          { $set: { _id: id, name, images, icons } },
+          { $set: { name, images, icons } },
           { new: true }
         )
       },
-    },
+    }
+
   },
 })
 
@@ -223,9 +217,9 @@ const Query = new GraphQLObjectType({
     },
     productsByCategoryId: {
       type: new GraphQLList(ProductType),
-      args: { id: { type: GraphQLString } },
-      resolve(parent, { id }) {
-        return Products.find({ categories: id })
+      args: { categoryId: { type: GraphQLID } },
+      resolve(parent, { categoryId }) {
+        return Products.find({ categoryId: { $in: categoryId } })
       },
     },
     categoryByName: {
