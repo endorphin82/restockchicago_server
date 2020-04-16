@@ -1,5 +1,4 @@
 const graphql = require("graphql")
-// const TRASH_ID = require("../keys").TRASH_ID
 
 const {
   GraphQLObjectType,
@@ -18,7 +17,6 @@ const Products = require("../models/product")
 
 const ProductType = new GraphQLObjectType({
   name: "Product",
-
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: new GraphQLNonNull(GraphQLString) },
@@ -41,16 +39,19 @@ const CategoryType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLString },
     name: { type: new GraphQLNonNull(GraphQLString) },
+    parent: { type: GraphQLString },
     icons: { type: new GraphQLList(GraphQLString) },
     images: { type: new GraphQLList(GraphQLString) },
-    products: {
-      type: new GraphQLList(ProductType),
-      resolve({ products }, args) {
-        return Products.find({ _id: { $in: products } }, (err, docs) => {
-          console.log(docs)
-        })
-      },
-    },
+
+    // https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/
+    // products: {
+    //   type: new GraphQLList(ProductType),
+    //   resolve({ products }, args) {
+    //     return Products.find({ _id: { $in: products } }, (err, docs) => {
+    //       console.log(docs)
+    //     })
+    //   },
+    // },
   }),
 })
 
@@ -66,12 +67,12 @@ const Mutation = new GraphQLObjectType({
         images: { type: new GraphQLList(GraphQLString) },
         icon: { type: GraphQLString },
       },
-      resolve(parent, { name, price, categoryId, images, icon }) {
-        console.info("addProduct: ", { name, price, categoryId, images, icon })
+      resolve(parent, { name, price, categories, images, icon }) {
+        console.info("addProduct: ", { name, price, categories, images, icon })
         const product = new Products({
           name,
           price,
-          categoryId,
+          categories,
           images,
           icon,
         })
@@ -136,7 +137,7 @@ const Mutation = new GraphQLObjectType({
     deleteCascadeCategoryWithProductsById: {
       type: CategoryType,
       description: "Delete Category with products",
-      args: { id: { type: new GraphQLNonNull(GraphQLID) } },
+      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
       resolve(parent, { id }) {
         console.info("deleteCascadeCategoryWithProductsById :", id)
         return Products.deleteMany({
@@ -149,38 +150,44 @@ const Mutation = new GraphQLObjectType({
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
         name: { type: new GraphQLNonNull(GraphQLString) },
+        parent: { type: GraphQLString },
         icons: { type: new GraphQLList(GraphQLString) },
         images: { type: new GraphQLList(GraphQLString) },
       },
-      resolve(parent, { id, name, images, icons }) {
-        console.info("addCategory: ", { id, name, images, icons })
+      resolve(__, { id, name, images, icons, parent }) {
+        console.info("addCategory: ", { id, name, images, icons, parent })
         const category = new Categories({
           id,
           name,
           images,
           icons,
+          parent
         })
         return category.save()
       },
     },
+    // TODO:
+    // https://stackoverflow.com/questions/4012855/how-update-the-id-of-one-mongodb-document
     updateCategory: {
       type: CategoryType,
       args: {
         id: { type: new GraphQLNonNull(GraphQLString) },
         name: { type: new GraphQLNonNull(GraphQLString) },
+        parent: { type: GraphQLString },
         images: { type: new GraphQLList(GraphQLString) },
         icons: { type: new GraphQLList(GraphQLString) },
       },
-      resolve(parent, { id, name, images, icons }) {
+      resolve(_, { id, name, images, icons, parent }) {
         console.info("updateCategory :", {
           id,
           name,
           images,
           icons,
+          parent
         })
         return Categories.findByIdAndUpdate(
           id,
-          { $set: { _id: id, name, images, icons } },
+          { $set: { _id: id, name, images, icons, parent } },
           { new: true }
         )
       },
