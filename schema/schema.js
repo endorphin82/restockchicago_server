@@ -1,5 +1,4 @@
 const graphql = require("graphql")
-
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -39,7 +38,7 @@ const ProductType = new GraphQLObjectType({
 const CategoryType = new GraphQLObjectType({
   name: "Category",
   fields: () => ({
-    id: { type: GraphQLString },
+    _id: { type: GraphQLString },
     name: { type: new GraphQLNonNull(GraphQLString) },
     parent: { type: GraphQLString },
     icons: { type: new GraphQLList(GraphQLString) },
@@ -139,32 +138,34 @@ const Mutation = new GraphQLObjectType({
     deleteCascadeCategoryWithProductsById: {
       type: CategoryType,
       description: "Delete Category with products",
-      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
-      resolve(parent, { id }) {
-        console.info("deleteCascadeCategoryWithProductsById :", id)
+      args: { _id: { type: new GraphQLNonNull(GraphQLString) } },
+      resolve(parent, { _id }) {
+        console.info("deleteCascadeCategoryWithProductsById :", _id)
         return Products.deleteMany({
-          categoryes: id,
-        }).then((res) => Categories.findByIdAndRemove(id).then((mes) => mes))
+          categoryes: _id,
+        }).then((res) => Categories.findByIdAndRemove(_id).then((mes) => mes))
       },
     },
     addCategory: {
       type: CategoryType,
       args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
+        _id: { type: new GraphQLNonNull(GraphQLString) },
         name: { type: new GraphQLNonNull(GraphQLString) },
         parent: { type: GraphQLString },
         icons: { type: new GraphQLList(GraphQLString) },
         images: { type: new GraphQLList(GraphQLString) },
       },
-      resolve(__, { id, name, images, icons, parent }) {
-        console.info("addCategory: ", { id, name, images, icons, parent })
+      resolve(__, { _id, name, images, icons, parent }) {
         const category = new Categories({
-          id,
+          _id,
           name,
           images,
           icons,
-          parent
+          parent,
         })
+        // console.log("###############", category)
+
+        // category._id = _id
         return category.save()
       },
     },
@@ -173,23 +174,23 @@ const Mutation = new GraphQLObjectType({
     updateCategory: {
       type: CategoryType,
       args: {
-        id: { type: new GraphQLNonNull(GraphQLString) },
+        _id: { type: new GraphQLNonNull(GraphQLString) },
         name: { type: new GraphQLNonNull(GraphQLString) },
         parent: { type: GraphQLString },
         images: { type: new GraphQLList(GraphQLString) },
         icons: { type: new GraphQLList(GraphQLString) },
       },
-      resolve(_, { id, name, images, icons, parent }) {
+      resolve(_, { _id, name, images, icons, parent }) {
         console.info("updateCategory :", {
-          id,
+          _id,
           name,
           images,
           icons,
-          parent
+          parent,
         })
         return Categories.findByIdAndUpdate(
-          id,
-          { $set: { _id: id, name, images, icons, parent } },
+          _id,
+          { $set: { _id, name, images, icons, parent } },
           { new: true }
         )
       },
@@ -218,10 +219,10 @@ const Query = new GraphQLObjectType({
     },
     categoryById: {
       type: CategoryType,
-      args: { id: { type: GraphQLString } },
-      resolve(parent, { id }) {
-        console.info("categoryById:", id)
-        return Categories.findById(id)
+      args: { _id: { type: GraphQLString } },
+      resolve(parent, { _id }) {
+        console.info("categoryById:", _id)
+        return Categories.findById(_id)
       },
     },
     productsAll: {

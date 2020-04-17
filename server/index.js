@@ -3,17 +3,17 @@ const graphqlHTTP = require("express-graphql")
 const schema = require("../schema/schema")
 const mongoose = require("mongoose")
 const cors = require("cors")
+const MongoClient = require("mongodb").MongoClient
+const assert = require("assert")
 
 const app = express()
 const PORT = process.env.PORT || 3005
 const HOST = process.env.HOST || "http://localhost"
-const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/restockchicago"
+const MONGO_URL =  process.env.MONGO_URL || "mongodb://localhost:27017/restockchicago"
 
-
-// logging all data in console
 const logData = (req, res, next) => {
   const originalSend = res.send
-  res.send = function(data) {
+  res.send = function (data) {
     console.info(data)
 
     originalSend.call(res, data)
@@ -26,21 +26,21 @@ const logData = (req, res, next) => {
 
 app.use([cors(), logData])
 
-mongoose.connect(MONGO_URL, { 
+mongoose.connect(MONGO_URL, {
   useUnifiedTopology: true,
-  useNewUrlParser: true 
+  useNewUrlParser: true,
 })
 
 app.use(
   "/graphql",
   graphqlHTTP({
     schema,
-    graphiql: true
+    graphiql: true,
   })
-) 
+)
 
 const dbConnection = mongoose.connection
-dbConnection.on("error", err => {
+dbConnection.on("error", (err) => {
   console.log(`Connection error: ${err}`)
 })
 
@@ -48,7 +48,7 @@ dbConnection.once("open", () => {
   console.log("Connected to DB")
 })
 
-app.listen(PORT, err => {
+app.listen(PORT, (err) => {
   err
     ? console.log(err)
     : console.log(
