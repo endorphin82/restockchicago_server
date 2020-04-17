@@ -22,15 +22,17 @@ const ProductType = new GraphQLObjectType({
     name: { type: new GraphQLNonNull(GraphQLString) },
     price: { type: new GraphQLNonNull(GraphQLFloat) },
     images: { type: new GraphQLList(GraphQLString) },
+    categories: { type: new GraphQLList(GraphQLString) },
     icon: { type: GraphQLString },
-    categories: {
-      type: new GraphQLList(CategoryType),
-      resolve({ categories }, args) {
-        return Categories.find({ _id: { $in: categories } }, (err, docs) => {
-          console.log(docs)
-        })
-      },
-    },
+
+    // categories: {
+    //   type: new GraphQLList(CategoryType),
+    //   resolve({ categories }, args) {
+    //     return Categories.find({ _id: { $in: categories } }, (err, docs) => {
+    //       console.log(docs)
+    //     })
+    //   },
+    // },
   }),
 })
 
