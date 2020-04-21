@@ -225,6 +225,16 @@ const Query = new GraphQLObjectType({
         return Categories.findById(_id)
       },
     },
+
+    categoriesByParentId: {
+      type: new GraphQLList(CategoryType),
+      args: { parent: { type: GraphQLString } },
+      resolve(_, { parent }) {
+        console.info("categoryById:", parent)
+        return Categories.find({parent})
+      },
+    },
+
     productsAll: {
       type: new GraphQLList(ProductType),
       resolve: () => {

@@ -3,8 +3,6 @@ const graphqlHTTP = require("express-graphql")
 const schema = require("../schema/schema")
 const mongoose = require("mongoose")
 const cors = require("cors")
-const MongoClient = require("mongodb").MongoClient
-const assert = require("assert")
 
 const app = express()
 const PORT = process.env.PORT || 3005
