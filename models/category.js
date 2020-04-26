@@ -6,9 +6,8 @@ const categorySchema = new Schema({
   name: String,
   icons: [String],
   images: [String],
-  parent: String
-    // https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/
-  // products: [String],
+  parent: String,
+  createdAt    : { type: Date, required: true, default: Date.now }
 })
 
 module.exports = mongoose.model("category", categorySchema)
