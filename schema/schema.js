@@ -161,7 +161,7 @@ const Mutation = new GraphQLObjectType({
           name,
           images,
           icons,
-          parent,
+          parent
         })
         // console.log("###############", category)
 
@@ -209,12 +209,12 @@ const Query = new GraphQLObjectType({
       },
     },
     //ok
-    productByName: {
+    productsByName: {
       type: new GraphQLList(ProductType),
       args: { name: { type: GraphQLString } },
       resolve(parent, { name }) {
         console.info("productByName:", name)
-        return Products.find({ name: { $regex: name, $options: "i" } })
+        return Products.find({ name: { $regex: name, $options: "i" } }).sort({_id: -1})
       },
     },
     categoryById: {
@@ -239,14 +239,14 @@ const Query = new GraphQLObjectType({
       type: new GraphQLList(ProductType),
       resolve: () => {
         console.info("productsAll")
-        return Products.find({})
+        return Products.find({}).sort({_id: -1})
       },
     },
     productsByCategoryId: {
       type: new GraphQLList(ProductType),
       args: { id: { type: GraphQLString } },
       resolve(parent, { id }) {
-        return Products.find({ categories: id })
+        return Products.find({ categories: id }).sort({_id: -1})
       },
     },
     categoryByName: {
@@ -261,7 +261,7 @@ const Query = new GraphQLObjectType({
       type: new GraphQLList(CategoryType),
       resolve: () => {
         console.info("categoriesAll")
-        return Categories.find({})
+        return Categories.find({}).sort({createdAt: -1})
       },
     },
     categoriesByListNames: {
