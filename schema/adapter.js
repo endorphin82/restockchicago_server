@@ -1,4 +1,4 @@
-class Target {
+class Factory {
     constructor(type) {
         let result
 
@@ -42,6 +42,6 @@ class Adapter extends Adaptee {
 
 
 function init_Adapter() {
-    var f = new Target("adapter")
+    var f = new Factory("adapter")
     f.Request()
 }
